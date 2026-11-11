@@ -13,7 +13,8 @@ export function GET(request: NextRequest) {
   catch { return NextResponse.json({ error: '작품을 불러오지 못했어요.' }, { status: 500 }); }
 }
 export async function POST(request: NextRequest) {
-  if (request.headers.get('origin') && request.headers.get('origin') !== request.nextUrl.origin) return NextResponse.json({ error: '허용되지 않은 요청입니다.' }, { status: 403 });
+  const origin = new URL(process.env.KAKAO_REDIRECT_URI || request.url).origin;
+  if (request.headers.get('origin') && request.headers.get('origin') !== origin) return NextResponse.json({ error: '허용되지 않은 요청입니다.' }, { status: 403 });
   try {
     const body = await request.json();
     const voter = request.cookies.get('pepero-voter')?.value || randomUUID();

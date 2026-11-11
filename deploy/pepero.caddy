@@ -1,0 +1,4 @@
+pepero.waps.im {
+    reverse_proxy pepero-web-1:3000
+    encode zstd gzip
+}

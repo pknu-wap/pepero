@@ -60,3 +60,19 @@ python3 scripts/smoke-test.py
 검증: `node scripts/auth.test.mjs` (Node.js 22.18 이상). 실제 카카오 계정으로 로그인하는 전체 흐름은 콘솔 설정과 사용자 동의가 필요합니다.
 
 공식 문서: https://developers.kakao.com/docs/ko/kakaologin/rest-api
+
+## Docker 배포 (waps)
+
+서비스 주소: https://pepero.waps.im
+
+서버의 `/home/ubuntu/pepero/.env.local`에 런타임 설정을 저장하고, `KAKAO_REDIRECT_URI=https://pepero.waps.im/api/auth/callback`을 설정합니다. 환경변수와 로컬 데이터는 Docker 빌드 컨텍스트에서도 제외합니다.
+
+```sh
+git pull --ff-only
+sudo docker compose up -d --build
+sudo docker compose ps
+```
+
+컨테이너는 일반 사용자로 실행하며 자동 재시작과 상태 검사를 사용합니다. 작품·세션은 `pepero_pepero-data` Docker 볼륨에 유지됩니다. `docker compose down -v`는 데이터를 삭제하므로 사용하지 마세요. 데이터 백업은 별도로 보관하세요.
+
+기존 Caddy의 설정 파일에서 `deploy/pepero.caddy` 내용을 가져와 `pepero-web-1:3000`으로 프록시합니다. 컨테이너와 Caddy는 기존 `waps-network` 네트워크를 공유합니다. 호스트 진단 포트는 외부에 공개하지 않고 `127.0.0.1:3002`에만 바인딩합니다.
