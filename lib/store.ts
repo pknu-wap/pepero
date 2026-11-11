@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-export type Poem = { id: string; name: string; lines: string[]; created: number; voters: string[] };
+export type Poem = { id: string; authorId?: string; name: string; lines: string[]; created: number; voters: string[] };
 const directory = join(process.cwd(), '.data');
 const file = join(directory, 'poems.json');
 // ponytail: synchronous atomic writes support one Node server; use a database for multiple instances.

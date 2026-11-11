@@ -61,3 +61,5 @@ dialog input::placeholder{color:#a29283;font-size:13px}
 .kakao-login:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
 
 .author-name{font-size:13px;color:var(--muted);overflow-wrap:anywhere}.author-name strong{color:var(--ink);margin-left:8px;white-space:pre-wrap}.card-bottom>span,.auth-controls>span{min-width:0;overflow-wrap:anywhere;white-space:pre-wrap}.vote{flex-shrink:0}
+
+.owner-actions{display:flex;justify-content:flex-end;gap:14px;margin-top:14px}.owner-actions button{border:0;background:none;padding:6px 0;font-size:12px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}.owner-actions button:last-child{color:var(--accent)}
