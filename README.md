@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 빼빼로 삼행시 클럽
 
-## Getting Started
+한국어 삼행시를 작성하고 다른 방문자의 작품에 투표하는 Next.js 사이트입니다.
 
-First, run the development server:
+## 실행
 
-```bash
+```sh
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+http://localhost:3000 에서 확인합니다. 운영 실행은 `npm run build` 후 `npm start`입니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 기능
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 로그인 후 빼·빼·로 세 줄 입력 및 서버 검증 (카카오 닉네임 자동 사용)
+- 방문자 간 작품 및 투표 공유, 30초마다 목록 새로고침
+- 작품별 하트 투표와 취소
+- 접속할 때마다 무작위 순서로 표시 (투표·자동 갱신 시 기존 순서 유지)
+- 모바일 대응, 키보드 접근 가능한 작성 대화상자
+- 예시 작품 1개는 명시적으로 표시하며 초기 투표 수는 0
 
-## Learn More
+## 저장 및 운영 범위
 
-To learn more about Next.js, take a look at the following resources:
+데이터는 Git에서 제외된 `.data/poems.json`에 원자적으로 저장됩니다. 쓰기 가능한 영구 디스크를 가진 **단일 Node.js 서버**용입니다. 서버리스/다중 인스턴스 배포에는 공유 데이터베이스로 교체해야 합니다. 데이터를 유지하려면 `.data` 디렉터리를 백업하세요.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+투표는 HttpOnly 쿠키로 브라우저를 구분합니다. 로그인 기반의 사람당 1표 보장은 아니며 쿠키를 지우면 새로운 방문자로 처리됩니다. 공개 대규모 운영 전에는 인증, 요청 제한과 신고·관리 기능을 추가하세요.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 검증
 
-## Deploy on Vercel
+```sh
+npm run build
+# 개발 서버를 실행한 뒤, 별도 터미널에서
+python3 scripts/smoke-test.py
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+스모크 테스트는 로컬 서버에 테스트 작품을 등록하여 다른 쿠키 세션에서 공유 여부, 투표, 취소 및 유효성 검사를 확인하고 테스트 작품을 제거합니다. 개발 환경에서만 실행하세요.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 카카오 로그인
+
+전달받은 REST API 키는 Git에서 제외되는 `.env.local`에 설정되어 있습니다. 다른 환경에서는 `.env.example`을 참고해 다음 변수를 설정하세요.
+
+- `KAKAO_REST_API_KEY`: 카카오 REST API 키
+- `KAKAO_REDIRECT_URI`: 로컬에서는 `http://localhost:3000/api/auth/callback`, 배포 시 실제 HTTPS 도메인의 `/api/auth/callback`
+- `KAKAO_CLIENT_SECRET`: 카카오 개발자 콘솔에서 Client Secret이 활성화되어 있다면 필수
+
+카카오 개발자 콘솔에서:
+
+1. 앱의 카카오 로그인을 활성화합니다.
+2. REST API 키 설정에 위 Redirect URI를 정확히 등록합니다.
+3. Client Secret이 활성화되어 있으면 해당 값을 서버 환경변수에 설정합니다.
+4. `profile_nickname` 동의 항목을 설정합니다. 로그인 시 닉네임 제공 동의를 요청하며, 닉네임을 받지 못하면 로그인을 완료하지 않습니다.
+
+환경변수 변경 후 개발 서버를 재시작하세요. `localhost`와 `127.0.0.1`은 다른 호스트이므로 설정한 주소로 접속해야 합니다.
+
+로그인 세션은 HttpOnly/SameSite 쿠키와 `.data/sessions`의 서버 레코드로 7일간 유지됩니다. HTTPS에서는 Secure 쿠키를 사용합니다. 카카오 액세스·리프레시 토큰은 브라우저나 디스크에 보관하지 않습니다. 로그아웃은 이 사이트의 세션을 폐기하며 카카오 계정 전체를 로그아웃하거나 연결을 해제하지 않습니다. 만료된 세션 파일은 조회 시 삭제됩니다.
+
+삼행시 작성에는 로그인이 필요합니다. 작성자 이름은 서버 세션의 카카오 닉네임을 자르거나 수정하지 않고 사용하며, 클라이언트가 보낸 이름은 무시합니다. 닉네임 입력란은 없습니다. 이전 버전 로그인 세션은 무효화되므로 다시 로그인해야 합니다. 비회원 조회·투표는 유지하며 투표 식별 방식은 기존 브라우저 쿠키 방식입니다. 계정당 투표 제한은 적용하지 않습니다.
+
+검증: `node scripts/auth.test.mjs` (Node.js 22.18 이상). 실제 카카오 계정으로 로그인하는 전체 흐름은 콘솔 설정과 사용자 동의가 필요합니다.
+
+공식 문서: https://developers.kakao.com/docs/ko/kakaologin/rest-api

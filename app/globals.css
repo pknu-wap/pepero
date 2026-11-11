@@ -1,26 +1,63 @@
 @import "tailwindcss";
+:root{--ink:#4b2c25;--muted:#8c7365;--line:#e4d3b9;--accent:#ad382e;--paper:#fffdf3;--cream:#f6edda}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background-color:var(--cream);background-image:radial-gradient(#bfa78338 .7px,transparent .7px);background-size:7px 7px;color:var(--ink);font:14px Arial,'Apple SD Gothic Neo','Malgun Gothic',sans-serif}
+body::before{content:'';display:block;height:10px;background:repeating-linear-gradient(90deg,var(--accent) 0 22px,#f6edda 22px 44px);border-bottom:1px solid #ae382e22}
+button,input{font:inherit}
+button{cursor:pointer;transition:background .18s,transform .18s,box-shadow .18s}
+button:disabled{opacity:.5;cursor:wait}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+main{max-width:1120px;margin:auto;padding:58px 32px 90px}
+.title-row{position:relative;text-align:center;padding:8px 0 51px;margin-bottom:40px;border-bottom:1px solid #cbb697;isolation:isolate}
+.title-row::after{content:'';position:absolute;bottom:-4px;left:50%;width:7px;height:7px;background:var(--accent);transform:translateX(-50%) rotate(45deg);box-shadow:0 0 0 9px var(--cream)}
+h1{margin:0 0 28px;font-size:clamp(28px,5.5vw,64px);font-weight:900;color:var(--accent);letter-spacing:-1.5px;word-spacing:.12em;line-height:1.4;white-space:nowrap;text-shadow:2px 3px 0 #fffcf1,4px 5px 0 #d6bda1}
+.wap-logo{display:inline-block;width:2.4em;height:auto;vertical-align:-.12em}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--accent);border-radius:8px;background:var(--accent);color:#fff8e7;padding:14px 22px;font-weight:700;box-shadow:0 3px 0 #762d25}
+.button:hover{background:#922e26;transform:translateY(-1px);box-shadow:0 4px 0 #762d25}
+.button:active{transform:translateY(2px);box-shadow:none}
+.pepero-decoration{position:absolute;top:40px;width:100px;height:170px;z-index:-1;pointer-events:none}
+.decoration-left{left:10%;transform:rotate(-18deg)}
+.decoration-right{right:10%;transform:rotate(20deg)}
+.chiikawa-pepero{display:block;width:100%;height:100%;object-fit:contain}
+.pepero-decoration i{position:absolute;display:block;width:15px;height:165px;border-radius:8px 8px 3px 3px;background:linear-gradient(90deg,#ffffff18,transparent 55%,#00000016),linear-gradient(to bottom,#59382c 0 76%,#d5a45f 76%);box-shadow:2px 3px 0 #b8986b26}
+.pepero-decoration i:first-child{left:28px;transform:rotate(-10deg)}
+.pepero-decoration i:last-child{left:62px;top:12px;transform:rotate(12deg);background:radial-gradient(ellipse at center,#d2ac70 0 1px,transparent 2px) 0 0/10px 15px,linear-gradient(to bottom,#654334 0 76%,#d5a45f 76%)}
+.poem-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;align-items:start}
+.poem-card{position:relative;border:1px solid var(--line);border-radius:3px 3px 12px 12px;background:var(--paper);padding:31px 30px 22px;box-shadow:0 4px 0 #e7dac4,0 8px 20px #6c422007;overflow:hidden}
+.poem-card::before{content:'';position:absolute;inset:0 0 auto;height:6px;background:repeating-linear-gradient(90deg,#b44c3f 0 14px,#fff8e7 14px 26px);opacity:.8}
+.card-top{position:absolute;top:20px;right:24px;color:var(--muted);font-size:10px;letter-spacing:1px}
+.poem-lines{margin:12px 0 25px}
+.poem-lines>div{display:flex;align-items:baseline;gap:20px;min-height:55px;padding:11px 0;border-bottom:1px solid #e9ddc780}
+.poem-lines b{flex:none;font-size:29px;font-weight:800;color:var(--accent);line-height:1.4}
+.poem-lines p{margin:0;line-height:1.8;overflow-wrap:anywhere;font-size:15px;letter-spacing:-.35px}
+.card-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px}
+.vote{display:flex;align-items:center;gap:8px;min-width:63px;justify-content:center;background:#fff9ee;border:1px solid #e5d2b9;border-radius:30px;padding:9px 13px;color:#9b7262;font-size:12px}
+.vote:hover,.vote.voted{color:var(--accent);border-color:#dba697;background:#fce7dc}
+.vote:hover{transform:translateY(-1px)}
+.empty{text-align:center;padding:64px 16px;color:var(--muted)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff9e9;border-radius:8px;padding:14px 20px;max-width:90vw;display:flex;align-items:center;gap:16px;z-index:10;box-shadow:0 5px 20px #36201822}
+.toast button,.modal-top button{border:0;background:transparent;color:inherit;font-size:24px;cursor:pointer;min-width:32px;min-height:32px}
+dialog{margin:auto;border:1px solid var(--line);border-top:6px solid var(--accent);border-radius:12px;padding:30px;width:min(480px,92vw);max-height:90vh;background:var(--paper);color:var(--ink);box-shadow:0 24px 100px #311d2533}
+dialog::backdrop{background:#35251d80;backdrop-filter:blur(3px)}
+.modal-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
+.modal-top h2{margin:0;font-size:23px;letter-spacing:-.7px}
+.field-label{display:block;margin:16px 0 8px;font-weight:600;font-size:12px}
+dialog input{width:100%;border:1px solid var(--line);background:#fffef9;color:var(--ink);border-radius:6px;padding:13px;font-size:16px}
+dialog input::placeholder{color:#a29283;font-size:13px}
+.compose-lines{margin:24px 0}
+.compose-lines label{display:flex;align-items:center;gap:16px;margin:14px 0}
+.compose-lines b{font-size:28px;color:var(--accent)}
+.form-note{font-size:12px;color:var(--muted);line-height:1.6;margin:20px 0}
+.coral{color:var(--accent)}
+.submit{width:100%;margin-bottom:4px}
+@media(max-width:800px){.poem-grid{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding:42px 24px 64px}.decoration-left{left:2%}.decoration-right{right:2%}.pepero-decoration{transform:scale(.8) rotate(-18deg)}.decoration-right{transform:scale(.8) rotate(20deg)}.poem-card{padding:28px 23px 20px}.poem-lines>div{gap:14px}.poem-lines p{font-size:14px}}
+@media(max-width:600px){main{padding:34px 18px 50px}.title-row{padding-top:5px;margin-bottom:28px;padding-bottom:32px}h1{margin-bottom:23px;font-size:clamp(24px,6.5vw,39px);letter-spacing:-1px}.pepero-decoration{top:50px;left:-12px;transform:scale(.48) rotate(-20deg);transform-origin:left center}.decoration-right{left:auto;right:-12px;transform:scale(.48) rotate(20deg);transform-origin:right center}.button{padding:12px 18px;font-size:13px}.poem-grid{grid-template-columns:1fr;gap:22px}.poem-card{padding:29px 23px 20px}.poem-lines p{font-size:14px}.poem-lines b{font-size:27px}.poem-lines>div{gap:18px;min-height:53px}.toast{width:max-content;font-size:12px}dialog{padding:24px}.card-top{right:23px;font-size:10px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}button{transition:none}}
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+.auth-controls{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;min-height:40px;font-size:12px;color:var(--muted)}
+.auth-controls button{border:0;background:transparent;color:var(--ink);text-decoration:underline;text-underline-offset:3px;padding:10px}
+.kakao-login{display:inline-block;border-radius:8px;line-height:0}
+.kakao-login img{display:block;width:224px;height:46px;max-width:100%}
+.kakao-login:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+.author-name{font-size:13px;color:var(--muted);overflow-wrap:anywhere}.author-name strong{color:var(--ink);margin-left:8px;white-space:pre-wrap}.card-bottom>span,.auth-controls>span{min-width:0;overflow-wrap:anywhere;white-space:pre-wrap}.vote{flex-shrink:0}
